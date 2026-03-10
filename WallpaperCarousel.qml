@@ -17,25 +17,30 @@ PluginComponent {
     // BAR WIDGET — pill shown in the DankBar; click to toggle the carousel
     // -------------------------------------------------------------------------
     horizontalBarPill: Component {
-        Row {
-            spacing: Theme.spacingXS
+        Item {
+            implicitWidth: hpIcon.width
+            implicitHeight: hpIcon.height
             DankIcon {
+                id: hpIcon
+                anchors.centerIn: parent
                 name: "wallpaper"
-                size: Theme.iconSize - 6
+                size: root.iconSize
                 color: overlay.shown ? Theme.primary : Theme.surfaceText
-                anchors.verticalCenter: parent.verticalCenter
             }
         }
     }
 
     verticalBarPill: Component {
-        Column {
-            spacing: Theme.spacingXS
+        Item {
+            readonly property real _pad: (root.barConfig?.removeWidgetPadding ?? false) ? 0 : ((root.barConfig?.widgetPadding ?? 12) * (root.widgetThickness / 30))
+            implicitWidth: vpIcon.width
+            implicitHeight: Math.max(1, root.widgetThickness - _pad * 2)
             DankIcon {
+                id: vpIcon
+                anchors.centerIn: parent
                 name: "wallpaper"
-                size: Theme.iconSize - 6
+                size: root.iconSize
                 color: overlay.shown ? Theme.primary : Theme.surfaceText
-                anchors.verticalCenter: parent.verticalCenter
             }
         }
     }
@@ -328,7 +333,7 @@ PluginComponent {
                              : isOtherConfirming ? (0.75 + 0.40 * falloff) * 0.8
                              : isHovered ? 0.75 + 0.60 * falloff
                              : 0.75 + 0.40 * falloff
-                        opacity: isConfirmed ? 1.0
+                        opacity: isConfirmed ? 0.0
                                : isOtherConfirming ? 0.0
                                : isHovered ? 1.0
                                : 0.25 + 0.75 * falloff
