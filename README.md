@@ -15,6 +15,12 @@ This plugin integrates with all DMS features — selecting a wallpaper updates t
 
 https://github.com/user-attachments/assets/39bcde76-7d7b-40c0-a083-3b8961edf10b
 
+## Credits
+
+Original wallpaper picker by [ilyamiro](https://github.com/ilyamiro/nixos-configuration).
+
+Wallpaper collection in the screenshot/video from [Andreas Rocha](https://www.andreasrocha.com/)
+
 
 ## Install
 
