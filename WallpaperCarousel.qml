@@ -23,11 +23,19 @@ PluginComponent {
     readonly property string wallpaperFolder: {
         if (_overrideDir)
             return _overrideDir;
-        const p = SessionData.wallpaperPath;
-        if (!p || p.startsWith("#"))
+
+        let wp = (SessionData.perMonitorWallpaper && overlay.screen)
+                   ? SessionData.getMonitorWallpaper(overlay.screen.name)
+                   : "";
+
+        if (!wp)
+            wp = SessionData.wallpaperPath;
+
+        if (!wp || wp.startsWith("#"))
             return Paths.strip(Paths.pictures);
-        const lastSlash = p.lastIndexOf('/');
-        return lastSlash > 0 ? p.substring(0, lastSlash) : Paths.strip(Paths.pictures);
+
+        const lastSlash = wp.lastIndexOf('/');
+        return lastSlash > 0 ? wp.substring(0, lastSlash) : Paths.strip(Paths.pictures);
     }
 
     readonly property string wallpaperFolderUrl: "file://" + wallpaperFolder
@@ -55,7 +63,7 @@ PluginComponent {
         sortField: FolderListModel.Name
 
         onStatusChanged: {
-            if (status === FolderListModel.Ready && !root._initialSyncDone) {
+            if (status === FolderListModel.Ready) {
                 root._syncStableModel();
                 root._initialSyncDone = true;
             }
@@ -158,7 +166,7 @@ PluginComponent {
     //   cycle-previous — if closed: open; then highlight previous wallpaper
     // -------------------------------------------------------------------------
     IpcHandler {
-        target: "wallpaperCarousel"
+        target: "wallpaperCarouselMM"
 
         function toggle(): string {
             root.toggle();
@@ -189,7 +197,7 @@ PluginComponent {
         visible: false
         color: "transparent"
 
-        WlrLayershell.namespace: "dms:plugins:wallpaperCarousel"
+        WlrLayershell.namespace: "dms:plugins:wallpaperCarouselMM"
         WlrLayershell.layer: WlrLayershell.Overlay
         WlrLayershell.exclusiveZone: -1
         WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
@@ -231,31 +239,34 @@ PluginComponent {
                     return;
 
                 let targetIndex = 0;
-                const wp = (SessionData.perMonitorWallpaper && overlay.screen)
+                let found = false;
+                let wp = (SessionData.perMonitorWallpaper && overlay.screen)
                            ? SessionData.getMonitorWallpaper(overlay.screen.name)
-                           : SessionData.wallpaperPath;
+                           : "";
+                if (!wp)
+                    wp = SessionData.wallpaperPath;
+
                 const currentFile = (wp || "").split('/').pop();
                 if (currentFile && stableModel.count > 0) {
                     for (let i = 0; i < stableModel.count; i++) {
                         if (stableModel.get(i).fileName === currentFile) {
                             targetIndex = i;
+                            found = true;
                             break;
                         }
                     }
                 }
 
                 const v = root._currentView;
-                if (v.count > targetIndex) {
-                    v.currentIndex = targetIndex;
-                    if (!root._isInfinite)
-                        v.positionViewAtIndex(targetIndex, ListView.Center);
-                    initialFocusSet = true;
-                } else if (v.count > 0) {
-                    const safeIndex = Math.min(targetIndex, v.count - 1);
+                if (v.count > 0) {
+                    const safeIndex = found ? targetIndex : 0;
                     v.currentIndex = safeIndex;
                     if (!root._isInfinite)
                         v.positionViewAtIndex(safeIndex, ListView.Center);
-                    initialFocusSet = true;
+
+                    if (found || (folderModel.status === FolderListModel.Ready && folderModel.folder.toString() === root.wallpaperFolderUrl)) {
+                        initialFocusSet = true;
+                    }
                 }
             }
 
@@ -653,7 +664,7 @@ PluginComponent {
         width: 1
         height: 1
 
-        WlrLayershell.namespace: "dms:plugins:wallpaperCarousel:precache"
+        WlrLayershell.namespace: "dms:plugins:wallpaperCarouselMM:precache"
         WlrLayershell.layer: WlrLayershell.Background
         WlrLayershell.exclusiveZone: 0
 
@@ -678,6 +689,6 @@ PluginComponent {
     }
 
     Component.onCompleted: {
-        console.info("WallpaperCarousel: daemon loaded — use 'dms ipc call wallpaperCarousel toggle' to open");
+        console.info("WallpaperCarouselMM: daemon loaded — use 'dms ipc call wallpaperCarouselMM toggle' to open");
     }
 }

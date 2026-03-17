@@ -2,7 +2,7 @@ import QtQuick
 import qs.Modules.Plugins
 
 PluginSettings {
-    pluginId: "wallpaperCarousel"
+    pluginId: "wallpaperCarouselMM"
 
     StringSetting {
         settingKey: "wallpaperDirectory"
