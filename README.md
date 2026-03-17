@@ -1,3 +1,11 @@
+# Fork
+
+This fork of Wallpaper Carousel has been created for personal use.
+It makes the wallpaper changing logic relative to the folder of the wallpaper, effectively providing
+a way of having different wallpapers for multi-monitors setups.
+
+Original README.md:
+
 # Wallpaper Carousel
 
 Based on the original wallpaper picker by [ilyamiro](https://github.com/ilyamiro/nixos-configuration).
@@ -12,8 +20,7 @@ Wallpaper Carousel scans your current wallpaper directory and displays all image
 
 This plugin integrates with all DMS features — selecting a wallpaper updates the shell wallpaper, color scheme, and any other DMS components that react to wallpaper changes.
 
-
-https://github.com/user-attachments/assets/39bcde76-7d7b-40c0-a083-3b8961edf10b
+<https://github.com/user-attachments/assets/39bcde76-7d7b-40c0-a083-3b8961edf10b>
 
 ## Credits
 
@@ -21,16 +28,17 @@ Original wallpaper picker by [ilyamiro](https://github.com/ilyamiro/nixos-config
 
 Wallpaper collection in the screenshot/video from [Andreas Rocha](https://www.andreasrocha.com/)
 
-
 ## Install
 
 > **Note:** DankMaterialShell must be managing your wallpaper for this plugin to work. It does not work with external wallpaper engines (e.g. swww, swaybg, hyprpaper). Enable wallpaper management in DMS Settings → Wallpaper.
 
 1. Download the latest archive from the [Releases](../../releases) page
 2. Extract it into your DMS plugins directory:
+
    ```sh
    tar xf wallpaperCarousel-*.tar.gz -C "${XDG_CONFIG_HOME:-$HOME/.config}/DankMaterialShell/plugins/"
    ```
+
 3. Open DankMaterialShell Settings → Plugins and enable **Wallpaper Carousel**
 4. Bind keys in your compositor config (see below) or call the IPC commands from a script
 
@@ -38,12 +46,12 @@ Wallpaper collection in the screenshot/video from [Andreas Rocha](https://www.an
 
 Control the carousel via DMS IPC:
 
-| Command | Description |
-|---------|-------------|
-| `dms ipc wallpaperCarousel toggle` | Open or close the overlay |
-| `dms ipc wallpaperCarousel open` | Open the overlay |
-| `dms ipc wallpaperCarousel close` | Close the overlay |
-| `dms ipc wallpaperCarousel cycleNext` | Open (if closed) and highlight next wallpaper |
+| Command                                   | Description                                       |
+| ----------------------------------------- | ------------------------------------------------- |
+| `dms ipc wallpaperCarousel toggle`        | Open or close the overlay                         |
+| `dms ipc wallpaperCarousel open`          | Open the overlay                                  |
+| `dms ipc wallpaperCarousel close`         | Close the overlay                                 |
+| `dms ipc wallpaperCarousel cycleNext`     | Open (if closed) and highlight next wallpaper     |
 | `dms ipc wallpaperCarousel cyclePrevious` | Open (if closed) and highlight previous wallpaper |
 
 **Keyboard shortcuts** (when open): `←` / `→` to navigate, `Enter` to apply, `Escape` to close.
